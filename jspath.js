@@ -48,7 +48,7 @@ function createJSPath(selectors) {
         } else {
             return result + '.' + currentValue;
         }
-    })
+    }, '')
 }
 
 console.log(createJSPath(inboxSelectors)); // -> document.querySelector("#mainApp").shadowRoot.querySelector("#mailApp").shadowRoot.querySelector("#menuList").shadowRoot.querySelector('#list').querySelector('nct-paper-menu-item[name="Входящие"]')
