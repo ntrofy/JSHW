@@ -9,48 +9,71 @@ const contextMenuSelectors = ['#mainApp', 'shadowRoot', '#mailApp', 'shadowRoot'
 
 // 0. for
 /*function createJSPath(selectors) {
+    let jsPath = ['document'];
     for (var i = 0; i < selectors.length; i++) {
-        if (selectors[i] != 'shadowRoot') {
-            selectors[i] = 'querySelector("' + selectors[i] +'")';
+        if (selectors[i] !== 'shadowRoot') {
+            jsPath.push(`querySelector("${selectors[i]}")`);
+        } else {
+            jsPath.push(selectors[i]);
         }
-    }
-    return 'document.' + selectors.join('.');
-    //throw new Error("Not Implemented");
+    };
+    return jsPath.join('.');
 }*/
 
 // 1. forEach
 /*function createJSPath(selectors) {
+    let jsPath = ['document'];
     selectors.forEach( (item, i, selectors) => {
-        if (item != 'shadowRoot') {
-            selectors[i] = 'querySelector("' + item +'")';
+        if (item !== 'shadowRoot') {
+            jsPath.push(`querySelector("${selectors[i]}")`);
+        } else {
+            jsPath.push(selectors[i]);
         }
-    })
-    return 'document.' + selectors.join('.');
+    });
+    return jsPath.join('.');
 }*/
 
-// 2. map
+// 1.1 forEach with ternary operator
+/*function createJSPath(selectors) {
+    let jsPath = ['document'];
+    selectors.forEach( (item, i, selectors) => {
+        item !== 'shadowRoot' ? jsPath.push(`querySelector("${selectors[i]}")`) : jsPath.push(selectors[i]);
+    });
+    return jsPath.join('.');
+}*/
+
+// 2. map with if
 /*function createJSPath(selectors) {
     let path = selectors.map( item => {
-        if (item != 'shadowRoot') {
-            return 'querySelector("' + item +'")';
-        } else {
-            return item;
+        if (item !== 'shadowRoot') {
+            return `querySelector("${item}")`;
         }
-    })
-    return 'document.' + path.join('.');
+        return item;
+        });
+    return `document.${path.join('.')}`;
 }*/
 
-// 3. reduce
+// 2.1 map with ternary operator
+// Это решение не работает. Выше слелала вариант 1.1 forEach с тернарным оператором, там всё работает
 function createJSPath(selectors) {
-    return 'document.' + selectors.reduce( (result, currentValue) => {
-        if (currentValue != 'shadowRoot') {
-            return result + '.'+ 'querySelector("' + currentValue +'")';
-        } else {
-            return result + '.' + currentValue;
-        }
-    }, '')
+    let path = selectors.map( item => {
+        (item !== 'shadowRoot') ? `querySelector("${item}")` : item;
+        });
+    return `document.${path.join('.')}`;
 }
+
+// 3. reduce
+/*function createJSPath(selectors) {
+    return selectors.reduce( (result, currentValue) => {
+        if (currentValue !== 'shadowRoot') {
+            return `${result}.querySelector("${currentValue}")`;
+        }
+        return `${result}.${currentValue}`
+    }, 'document')
+}*/
+
 
 console.log(createJSPath(inboxSelectors)); // -> document.querySelector("#mainApp").shadowRoot.querySelector("#mailApp").shadowRoot.querySelector("#menuList").shadowRoot.querySelector('#list').querySelector('nct-paper-menu-item[name="Входящие"]')
 console.log(createJSPath(settingsSelectors)); // -> document.querySelector("#mainApp").shadowRoot.querySelector("#appSwitcher").shadowRoot.querySelector("#settings")
 console.log(createJSPath(contextMenuSelectors)); // -> document.querySelector("#mainApp").shadowRoot.querySelector("#mailApp").shadowRoot.querySelector("#menuList").shadowRoot.querySelector("#contextMenuBlock")
+console.log(createJSPath(inboxSelectors)); // -> document.querySelector("#mainApp").shadowRoot.querySelector("#mailApp").shadowRoot.querySelector("#menuList").shadowRoot.querySelector('#list').querySelector('nct-paper-menu-item[name="Входящие"]')
