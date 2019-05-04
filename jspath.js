@@ -23,11 +23,11 @@ const contextMenuSelectors = ['#mainApp', 'shadowRoot', '#mailApp', 'shadowRoot'
 // 1. forEach
 /*function createJSPath(selectors) {
     let jsPath = ['document'];
-    selectors.forEach( (item, i, selectors) => {
+    selectors.forEach( (item) => {
         if (item !== 'shadowRoot') {
-            jsPath.push(`querySelector("${selectors[i]}")`);
+            jsPath.push(`querySelector("${item}")`);
         } else {
-            jsPath.push(selectors[i]);
+            jsPath.push(item);
         }
     });
     return jsPath.join('.');
@@ -36,8 +36,8 @@ const contextMenuSelectors = ['#mainApp', 'shadowRoot', '#mailApp', 'shadowRoot'
 // 1.1 forEach with ternary operator
 /*function createJSPath(selectors) {
     let jsPath = ['document'];
-    selectors.forEach( (item, i, selectors) => {
-        item !== 'shadowRoot' ? jsPath.push(`querySelector("${selectors[i]}")`) : jsPath.push(selectors[i]);
+    selectors.forEach( (item) => {
+        item !== 'shadowRoot' ? jsPath.push(`querySelector("${item}")`) : jsPath.push(item);
     });
     return jsPath.join('.');
 }*/
@@ -54,13 +54,10 @@ const contextMenuSelectors = ['#mainApp', 'shadowRoot', '#mailApp', 'shadowRoot'
 }*/
 
 // 2.1 map with ternary operator
-// Это решение не работает. Выше слелала вариант 1.1 forEach с тернарным оператором, там всё работает
-function createJSPath(selectors) {
-    let path = selectors.map( item => {
-        (item !== 'shadowRoot') ? `querySelector("${item}")` : item;
-        });
+/*function createJSPath(selectors) {
+    let path = selectors.map( item => (item !== 'shadowRoot') ? `querySelector("${item}")` : item);
     return `document.${path.join('.')}`;
-}
+}*/
 
 // 3. reduce
 /*function createJSPath(selectors) {
@@ -72,6 +69,16 @@ function createJSPath(selectors) {
     }, 'document')
 }*/
 
+// 4. reduce + join
+function createJSPath(selectors) {
+    let path = selectors.reduce( (result, currentValue) => {
+        if (currentValue !== 'shadowRoot') {
+            return result.concat(`querySelector("${currentValue}")`);
+        }
+        return result.concat(`${currentValue}`);
+    }, ['document']);
+    return path.join('.');
+}
 
 console.log(createJSPath(inboxSelectors)); // -> document.querySelector("#mainApp").shadowRoot.querySelector("#mailApp").shadowRoot.querySelector("#menuList").shadowRoot.querySelector('#list').querySelector('nct-paper-menu-item[name="Входящие"]')
 console.log(createJSPath(settingsSelectors)); // -> document.querySelector("#mainApp").shadowRoot.querySelector("#appSwitcher").shadowRoot.querySelector("#settings")
