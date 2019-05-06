@@ -30,7 +30,7 @@ logElementClass(document.querySelector('#home-q'));
 function getAttributes(element) {
     let myObject = {};
     var attrs = element.attributes;
-    for(var i = 0; i <= attrs.length - 1; i++) {
+    for(var i = 0; i < attrs.length; i++) {
         myObject[attrs[i].name] = attrs[i].value;
     }
     return myObject;
@@ -43,6 +43,4 @@ getAttributes(document.querySelector('#newsletter-submit'));
 // 2. сниппет для MDN - будет логировать с помощью console.log имена опубликованных блогов (см. скрин)
 var elem = document.querySelector('#content > div.center.clear > div.home-hacks > div > div.column-hacks > ul');
 var elements = elem.querySelectorAll('a');
-for (var i = 0; i < elements.length; i++) {
-    console.log( elements[i].innerHTML );
-}
+elements.forEach((item) => console.log(item.textContent));
