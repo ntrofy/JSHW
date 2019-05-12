@@ -3,20 +3,24 @@
  * @param {Array<string>} selectors
  * @returns {?HTMLElement}
  */
+// function getElement(selectors) {
+//     let elem=document;
+//     selectors.forEach ((item) => {
+//         (item ==='shadowRoot')? elem = elem.shadowRoot : elem = elem.querySelector(item)
+//     });
+//     return elem;
+// }
+
+// function getElement(selectors) {
+//     let elem=document;
+//     selectors.map ((item) => (item ==='shadowRoot')? elem = elem.shadowRoot : elem = elem.querySelector(item));
+//     return elem;
+// }
+
 function getElement(selectors) {
-    let elem={};
-    selectors.forEach ((item, i) => {
-        if (i===0) {
-            elem = document.querySelector(item);
-        } else {
-            if (item ==='shadowRoot') {
-                elem = elem.shadowRoot;
-            } else {
-                elem = elem.querySelector(item);
-            }
-        }
-    });
-    return elem;
+    return selectors.reduce ((elem,item) => (
+      (item ==='shadowRoot') ? elem.shadowRoot : elem.querySelector(item)
+    ), document);
 }
 
 //на вход будет ожидаться то, что раньше ожидалось для createJSPath,
@@ -36,7 +40,8 @@ function getAttributes(selectors) {
     return myObject;
 }
 
-//метод getElementAll, который будет для последнего селектора в массиве вызывать querySelectorAll и тем самым возвращать массив HTML-элементов
+//метод getElementAll, который будет для последнего селектора в массиве вызывать querySelectorAll
+// и тем самым возвращать массив HTML-элементов
 /**
  * @param {Array<string>} selectors
  * @returns {Array<HTMLElement>}
