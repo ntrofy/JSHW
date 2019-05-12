@@ -12,8 +12,8 @@
 // }
 
 // function getElement(selectors) {
-//     let elem=document;
-//     selectors.map ((item) => (item ==='shadowRoot')? elem = elem.shadowRoot : elem = elem.querySelector(item));
+//     let elem = document;
+//     selectors.map ((item) => { elem = (item ==='shadowRoot')? elem.shadowRoot : elem.querySelector(item)});
 //     return elem;
 // }
 
